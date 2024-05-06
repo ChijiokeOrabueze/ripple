@@ -1,4 +1,8 @@
 import { Repo } from ".";
-import { ITrigger } from "../db/models/trigger.model";
+import { ITrigger, Trigger } from "../db/models/trigger.model";
 
-export class TriggerRepository extends Repo<ITrigger> {}
+export class TriggerRepository extends Repo<ITrigger> {
+  constructor() {
+    super(Trigger);
+  }
+}

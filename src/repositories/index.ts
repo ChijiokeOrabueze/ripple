@@ -1,4 +1,4 @@
-import { FilterQuery, Model, ObjectId, Schema } from "mongoose";
+import { FilterQuery, Model } from "mongoose";
 import { Filter, Op } from "./types";
 
 export abstract class Repo<T> {
