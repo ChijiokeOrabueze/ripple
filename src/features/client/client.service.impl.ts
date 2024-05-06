@@ -18,16 +18,7 @@ export class ClientServiceImpl implements ClientService {
 
     if (!trigger) throw new Error("Trigger not found");
 
-    if (!this.incomingDataMatchesTrigger(data, trigger))
+    if (!this.triggerService.incomingDataMatchesTrigger(data, trigger))
       throw new Error("Incomplete trigger params");
-  };
-
-  private incomingDataMatchesTrigger = (
-    data: Record<string, string>,
-    trigger: TriggerResponseDto
-  ) => {
-    if (!trigger.params.length) return true;
-
-    return trigger.params.every(({ name }) => name in data);
   };
 }

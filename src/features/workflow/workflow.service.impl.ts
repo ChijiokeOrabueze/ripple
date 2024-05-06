@@ -1,6 +1,7 @@
 import { generateId } from "../../repositories/utils";
 import { WorkflowRepository } from "../../repositories/workflow.repository";
 import { ActionService } from "../action/action.service";
+import { TriggerResponseDto } from "../trigger/trigger.dto";
 import { TriggerService } from "../trigger/trigger.service";
 import { CreateWorkflowRequestDto } from "./workflow.dto";
 import { WorkflowService } from "./workflow.service";
@@ -25,7 +26,7 @@ export class WorkflowServiceImpl implements WorkflowService {
 
     if (!trigger) throw new Error("Trigger not found");
 
-    const actions = await this.createActions(data.actions);
+    const actions = await this.createActions(data.actions, trigger);
 
     const [createdData] = await this.workflowRepository.create([
       {
@@ -55,13 +56,28 @@ export class WorkflowServiceImpl implements WorkflowService {
     console.log({ workflows });
   };
 
-  private createActions = async (data: CreateWorkflowRequestDto["actions"]) => {
+  private createActions = async (
+    data: CreateWorkflowRequestDto["actions"],
+    trigger: TriggerResponseDto
+  ) => {
     const actionUrlToOrderMap: { [url in string]: number } = {};
 
+    let isIncompleteParam = false;
+
     const actionsToCreate = data.map(({ order, ...action }) => {
+      if (
+        !this.triggerService.incomingActionsMatchesTrigger(
+          action.params,
+          trigger
+        )
+      )
+        isIncompleteParam = true;
       actionUrlToOrderMap[action.url] = order;
       return action;
     });
+
+    if (isIncompleteParam)
+      throw new Error("Trigger and action is incompatible");
 
     const createdActions = await this.actionService.createActions(
       actionsToCreate

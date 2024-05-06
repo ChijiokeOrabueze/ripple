@@ -2,7 +2,7 @@ import { Router } from "express";
 import { WorkflowController } from "./workflow.controller";
 import { ApiContext } from "../../context";
 
-export const triggerRouter = () => {
+export const workflowRouter = () => {
   const router = Router();
 
   const workflowController = new WorkflowController(

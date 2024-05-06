@@ -1,4 +1,6 @@
 import { TriggerRepository } from "../../repositories/trigger.repository";
+import { ActionParamDto } from "../action/action.dto";
+import { TriggerResponseDto } from "./trigger.dto";
 import { mapToTriggerResponseDto } from "./trigger.mappers";
 import { TriggerService } from "./trigger.service";
 
@@ -37,5 +39,27 @@ export class TriggerServiceImpl implements TriggerService {
     if (!trigger) return null;
 
     return mapToTriggerResponseDto(trigger);
+  };
+
+  incomingDataMatchesTrigger = (
+    data: Record<string, string>,
+    trigger: TriggerResponseDto
+  ) => {
+    if (!trigger.params.length) return true;
+
+    return trigger.params.every(({ name }) => name in data);
+  };
+
+  incomingActionsMatchesTrigger = (
+    actionParams: ActionParamDto[],
+    trigger: TriggerResponseDto
+  ) => {
+    const triggerParamMap: { [key in string]: true } = {};
+
+    trigger.params.forEach(({ name }) => {
+      triggerParamMap[name] = true;
+    });
+
+    return actionParams.every(({ value }) => value in triggerParamMap);
   };
 }
