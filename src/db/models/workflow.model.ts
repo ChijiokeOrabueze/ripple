@@ -1,6 +1,8 @@
 import { Types, model } from "mongoose";
 import { IAudit, auditSchema } from "./shared";
 import { Schema } from "mongoose";
+import { ITrigger } from "./trigger.model";
+import { IAction } from "./action.model";
 
 export interface IWorkflowAction {
   action: Types.ObjectId;
@@ -11,6 +13,11 @@ export interface IWorkflow extends IAudit {
   name?: string;
   trigger: Types.ObjectId;
   actions: IWorkflowAction[];
+}
+
+export interface WorkflowPopulate {
+  trigger: ITrigger & { _id: string };
+  actions: { action: IAction & { _id: string }; order: number }[];
 }
 
 const WorkflowActionSchema = new Schema<IWorkflowAction>({

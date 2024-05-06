@@ -5,9 +5,11 @@ export const mapToTriggerResponseDto = ({
   updatedBy,
   params,
   ...others
-}: ITrigger & { id: string }) => {
+}: ITrigger &
+  ({ id: string; _id?: string } | { _id: string; id?: string })) => {
   return {
     ...others,
+    id: others._id || others.id,
     params: params.map((data) => mapToTriggerParamResponseDto(data)),
   };
 };

@@ -5,5 +5,5 @@ export interface WorkflowService {
     data: CreateWorkflowRequestDto
   ) => Promise<WorkflowResponseDto>;
 
-  getTriggerWorkflows: (triggerId: string) => Promise<void>;
+  getTriggerWorkflows: (triggerId: string) => Promise<WorkflowResponseDto[]>;
 }

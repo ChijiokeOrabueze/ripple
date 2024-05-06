@@ -1,10 +1,12 @@
 import { FilterQuery, Model, Types } from "mongoose";
-import { Filter, Op } from "./types";
+import { Filter, Op, PopulatePath } from "./types";
 
-export abstract class Repo<T> {
+export abstract class Repo<T, K = unknown> {
   protected readonly model: Model<T>;
-  constructor(model: Model<T>) {
+  private readonly populatePaths: PopulatePath[] = [];
+  constructor(model: Model<T>, populatePaths?: PopulatePath[]) {
     this.model = model;
+    if (populatePaths) this.populatePaths = populatePaths;
   }
 
   findAll = async () => {
@@ -20,6 +22,27 @@ export abstract class Repo<T> {
   findMany = async (filters?: Filter<T>[]) => {
     return this.toBulkExternal(
       await this.model.find(this.buildQuery(filters)).lean()
+    );
+  };
+
+  findManyAndPopulate = async (filters?: Filter<T>[]) => {
+    const resolvedPaths = this.populatePaths.map((path) => {
+      if (typeof path === "string") {
+        return {
+          path,
+        };
+      }
+
+      return {
+        path: path.pathName,
+        populate: path.innerPaths.map((innerPath) => ({ path: innerPath })),
+      };
+    });
+    return this.toBulkExternal(
+      await this.model
+        .find(this.buildQuery(filters))
+        .populate<K>(resolvedPaths)
+        .lean()
     );
   };
 

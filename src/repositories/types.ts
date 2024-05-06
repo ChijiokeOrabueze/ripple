@@ -5,3 +5,5 @@ export type Filter<T> = {
   value: string | number | null;
   op?: Op;
 };
+
+export type PopulatePath = string | { pathName: string; innerPaths: string[] };
