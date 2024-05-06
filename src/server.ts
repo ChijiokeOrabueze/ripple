@@ -11,7 +11,8 @@ app.get("/", (req, res) => {
 });
 
 const initApp = async () => {
-  await connectToDb();
+  const isConnected = await connectToDb();
+  if (!isConnected) return;
   app.listen(port, () => {
     return console.log(`App started on port ${port}`);
   });
