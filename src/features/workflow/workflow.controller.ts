@@ -1,20 +1,25 @@
 import { Request, Response } from "express";
 import { WorkflowService } from "./workflow.service";
 import { constructResponse } from "../../utils";
+import { CreateWorkflowRequestDto } from "./workflow.dto";
 
-export class TriggerController {
-  private readonly triggerService: WorkflowService;
+export class WorkflowController {
+  private readonly workflowService: WorkflowService;
 
-  constructor(triggerService: WorkflowService) {
-    this.triggerService = triggerService;
+  constructor(workflowService: WorkflowService) {
+    this.workflowService = workflowService;
   }
 
-  getTriggers = async (req: Request<{}, {}, {}, {}>, res: Response) => {
+  createWorkflow = async (
+    req: Request<{}, {}, CreateWorkflowRequestDto, {}>,
+    res: Response
+  ) => {
     try {
-      const result = await this.triggerService.getTriggers();
+      const result = await this.workflowService.createWorkflow(req.body);
       const response = constructResponse(
         result,
-        "Trigger fetched successfully"
+        "Workflow created successfully",
+        "create"
       );
       res.status(response.code).json(response);
     } catch (err: any) {

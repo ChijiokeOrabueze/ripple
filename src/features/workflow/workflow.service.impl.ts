@@ -1,4 +1,3 @@
-import { ActionRepository } from "../../repositories/action.repository";
 import { generateId } from "../../repositories/utils";
 import { WorkflowRepository } from "../../repositories/workflow.repository";
 import { ActionService } from "../action/action.service";

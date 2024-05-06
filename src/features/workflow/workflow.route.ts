@@ -1,16 +1,15 @@
 import { Router } from "express";
-import { TriggerController } from "./workflow.controller";
-import { TriggerServiceImpl } from "./workflow.service.impl";
-import { TriggerRepository } from "../../repositories/trigger.repository";
+import { WorkflowController } from "./workflow.controller";
+import { ApiContext } from "../../context";
 
 export const triggerRouter = () => {
   const router = Router();
 
-  const triggerRepository = new TriggerRepository();
-  const triggerService = new TriggerServiceImpl(triggerRepository);
-  const triggerController = new TriggerController(triggerService);
+  const workflowController = new WorkflowController(
+    ApiContext.getWorkflowService()
+  );
 
-  router.route("/").get(triggerController.getTriggers);
+  router.route("/").post(workflowController.createWorkflow);
 
   return router;
 };
