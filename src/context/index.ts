@@ -1,5 +1,7 @@
 import { ActionService } from "../features/action/action.service";
 import { ActionServiceImpl } from "../features/action/action.service.impl";
+import { ClientService } from "../features/client/client.service";
+import { ClientServiceImpl } from "../features/client/client.service.impl";
 import { TriggerService } from "../features/trigger/trigger.service";
 import { TriggerServiceImpl } from "../features/trigger/trigger.service.impl";
 import { WorkflowService } from "../features/workflow/workflow.service";
@@ -25,4 +27,7 @@ export class ApiContext {
       this.getTriggerService(),
       this.getActionService()
     );
+
+  static getClientService = (): ClientService =>
+    new ClientServiceImpl(this.getTriggerService());
 }
