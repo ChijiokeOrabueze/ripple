@@ -20,6 +20,18 @@ export class TriggerServiceImpl implements TriggerService {
   getTrigger = async (id: string) => {
     const [trigger] = await this.triggerRepository.findMany([
       { field: "id", value: id },
+      { field: "validTo", value: null },
+    ]);
+
+    if (!trigger) return null;
+
+    return mapToTriggerResponseDto(trigger);
+  };
+
+  getTriggerByName = async (name: string) => {
+    const [trigger] = await this.triggerRepository.findMany([
+      { field: "name", value: name },
+      { field: "validTo", value: null },
     ]);
 
     if (!trigger) return null;

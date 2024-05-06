@@ -1,4 +1,4 @@
-const rootUrl = "http://localhost:8080/clients";
+const rootUrl = "http://localhost:8080/api/v1/clients";
 export const triggerSeeds = [
   {
     url: `${rootUrl}/client1`,

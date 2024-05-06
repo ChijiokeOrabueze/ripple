@@ -47,6 +47,14 @@ export class WorkflowServiceImpl implements WorkflowService {
     };
   };
 
+  getTriggerWorkflows = async (triggerId: string) => {
+    const workflows = await this.workflowRepository.findMany([
+      { field: "trigger", value: triggerId },
+    ]);
+
+    console.log({ workflows });
+  };
+
   private createActions = async (data: CreateWorkflowRequestDto["actions"]) => {
     const actionUrlToOrderMap: { [url in string]: number } = {};
 
