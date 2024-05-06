@@ -1,11 +1,20 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
+import { connectToDb } from "./db";
 const app = express();
-const port = 3000;
+
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Ripple API running!");
 });
 
-app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
-});
+const initApp = async () => {
+  await connectToDb();
+  app.listen(port, () => {
+    return console.log(`App started on port ${port}`);
+  });
+};
+
+initApp();
