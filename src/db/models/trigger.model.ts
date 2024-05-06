@@ -12,9 +12,12 @@ export interface ITrigger extends IAudit {
   params: ITriggerParam[];
 }
 
-const triggerParamSchema = new Schema<ITriggerParam>({
-  name: { type: String, required: true, unique: true },
-});
+const triggerParamSchema = new Schema<ITriggerParam>(
+  {
+    name: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const triggerSchema = new Schema<ITrigger>({
   url: { type: String, required: true, unique: true },

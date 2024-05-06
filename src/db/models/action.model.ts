@@ -13,10 +13,13 @@ export interface IAction extends IAudit {
   params: IActionParam[];
 }
 
-const actionParamSchema = new Schema<IActionParam>({
-  name: { type: String, required: true },
-  value: { type: String, required: true },
-});
+const actionParamSchema = new Schema<IActionParam>(
+  {
+    name: { type: String, required: true },
+    value: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const actionSchema = new Schema<IAction>({
   url: { type: String, required: true, unique: true },
