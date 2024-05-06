@@ -1,4 +1,5 @@
 import { TriggerRepository } from "../../repositories/trigger.repository";
+import { mapToTriggerResponseDto } from "./trigger.mappers";
 import { TriggerService } from "./trigger.service";
 
 export class TriggerServiceImpl implements TriggerService {
@@ -8,7 +9,11 @@ export class TriggerServiceImpl implements TriggerService {
     this.triggerRepository = triggerRepository;
   }
 
-  h = async () => {
-    const h = await this.triggerRepository.findMany();
+  getTriggers = async () => {
+    const triggers = await this.triggerRepository.findMany([
+      { field: "validTo", value: null },
+    ]);
+
+    return triggers.map((trigger) => mapToTriggerResponseDto(trigger));
   };
 }

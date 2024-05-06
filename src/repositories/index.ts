@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from "mongoose";
+import { FilterQuery, Model, ObjectId, Schema } from "mongoose";
 import { Filter, Op } from "./types";
 
 export abstract class Repo<T> {
@@ -12,7 +12,17 @@ export abstract class Repo<T> {
   };
 
   findMany = async (filters?: Filter<T>[]) => {
-    return await this.model.find(this.buildQuery(filters)).lean();
+    return this.toBulkExternal(
+      await this.model.find(this.buildQuery(filters)).lean()
+    );
+  };
+
+  private toBulkExternal = <T extends { _id: unknown }>(data: T[]) => {
+    return data.map((record) => this.toExternal(record));
+  };
+
+  private toExternal = <T extends { _id: unknown }>({ _id, ...others }: T) => {
+    return { ...others, id: _id as string };
   };
 
   private eqQueryValue = ({ value }: Filter<T>) => {
