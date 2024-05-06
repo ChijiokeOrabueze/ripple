@@ -2,7 +2,7 @@ import { Router } from "express";
 import { ClientController } from "./client.controller";
 import { ApiContext } from "../../context";
 
-export const triggerRouter = () => {
+export const clientRouter = () => {
   const router = Router();
   const clientController = new ClientController(ApiContext.getClientService());
 

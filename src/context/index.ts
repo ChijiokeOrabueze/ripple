@@ -29,5 +29,5 @@ export class ApiContext {
     );
 
   static getClientService = (): ClientService =>
-    new ClientServiceImpl(this.getTriggerService());
+    new ClientServiceImpl(this.getTriggerService(), this.getWorkflowService());
 }

@@ -25,6 +25,7 @@ export class ClientController {
       res.status(response.code).json(response);
     } catch (err: any) {
       console.log({ err });
+      res.status(400).send(err);
     }
   };
 }
