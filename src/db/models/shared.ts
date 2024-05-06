@@ -1,10 +1,10 @@
 import { Schema } from "mongoose";
 
 export interface IAudit {
-  createdBy: string;
-  updatedBy: string | null;
-  validFrom: Date;
-  validTo: Date | null;
+  createdBy?: string;
+  updatedBy?: string | null;
+  validFrom?: Date;
+  validTo?: Date | null;
 }
 
 export const auditSchema = new Schema<IAudit>(

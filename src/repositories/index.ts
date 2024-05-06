@@ -1,4 +1,4 @@
-import { FilterQuery, Model } from "mongoose";
+import { FilterQuery, Model, Types } from "mongoose";
 import { Filter, Op } from "./types";
 
 export abstract class Repo<T> {
@@ -9,6 +9,12 @@ export abstract class Repo<T> {
 
   findAll = async () => {
     await this.model.find();
+  };
+
+  create = async (data: T[]) => {
+    return this.toBulkExternal(
+      await this.model.insertMany(data, { lean: true })
+    );
   };
 
   findMany = async (filters?: Filter<T>[]) => {
