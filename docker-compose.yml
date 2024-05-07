@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  ripple-api:
+    build: ./
+    ports:
+      - "8080:8080"
+    networks:
+      - ripple-app
+
+networks:
+  ripple-app:
+    driver: bridge
