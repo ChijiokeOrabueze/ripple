@@ -1,4 +1,3 @@
-import { ITrigger } from "../../db/models/trigger.model";
 import { generateId } from "../../repositories/utils";
 import { WorkflowRepository } from "../../repositories/workflow.repository";
 import { ActionRequestDto } from "../action/action.dto";
@@ -51,10 +50,10 @@ export class WorkflowServiceImpl implements WorkflowService {
     };
   };
 
-  getTriggerWorkflows = async (triggerId: string) => {
-    const workflows = await this.workflowRepository.findManyAndPopulate([
-      { field: "trigger", value: triggerId },
-    ]);
+  getWorkflows = async (triggerId?: string) => {
+    const workflows = await this.workflowRepository.findManyAndPopulate(
+      triggerId ? [{ field: "trigger", value: triggerId }] : []
+    );
 
     return workflows.map((workflow) => ({
       id: workflow.id,

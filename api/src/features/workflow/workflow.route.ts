@@ -9,7 +9,10 @@ export const workflowRouter = () => {
     ApiContext.getWorkflowService()
   );
 
-  router.route("/").post(workflowController.createWorkflow);
+  router
+    .route("/")
+    .post(workflowController.createWorkflow)
+    .get(workflowController.getWorkflows);
 
   router
     .route("/:workflowId/:actionId")
