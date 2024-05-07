@@ -11,5 +11,9 @@ export const workflowRouter = () => {
 
   router.route("/").post(workflowController.createWorkflow);
 
+  router
+    .route("/:workflowId/:actionId")
+    .put(workflowController.updateWorkflowAction);
+
   return router;
 };
