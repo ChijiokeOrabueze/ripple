@@ -1,4 +1,4 @@
-import { FilterQuery, Model, Types } from "mongoose";
+import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
 import { Filter, Op, PopulatePath } from "./types";
 
 export abstract class Repo<T, K = unknown> {
@@ -22,6 +22,14 @@ export abstract class Repo<T, K = unknown> {
   findMany = async (filters?: Filter<T>[]) => {
     return this.toBulkExternal(
       await this.model.find(this.buildQuery(filters)).lean()
+    );
+  };
+
+  updateOne = async (updates: UpdateQuery<T>, filters?: Filter<T>[]) => {
+    return this.toExternal(
+      await this.model
+        .findOneAndUpdate(this.buildQuery(filters), updates, { new: true })
+        .lean()
     );
   };
 

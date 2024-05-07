@@ -1,6 +1,7 @@
 import { ITrigger } from "../../db/models/trigger.model";
 import { generateId } from "../../repositories/utils";
 import { WorkflowRepository } from "../../repositories/workflow.repository";
+import { ActionRequestDto } from "../action/action.dto";
 import { ActionService } from "../action/action.service";
 import { TriggerResponseDto } from "../trigger/trigger.dto";
 import { mapToTriggerResponseDto } from "../trigger/trigger.mappers";
@@ -67,6 +68,48 @@ export class WorkflowServiceImpl implements WorkflowService {
       validFrom: workflow.validFrom || new Date(),
       validTo: workflow.validTo,
     }));
+  };
+
+  editWorkflowAction = async (
+    workflowId: string,
+    actionId: string,
+    update: ActionRequestDto
+  ) => {
+    const [workflow] = await this.workflowRepository.findManyAndPopulate([
+      { field: "id", value: workflowId },
+    ]);
+
+    if (!workflow) throw new Error("workflow not found");
+
+    const targetActionExists = workflow.actions.some(
+      ({ action }) => action._id === actionId
+    );
+
+    if (!targetActionExists) throw new Error("Action not found");
+
+    const updatedAction = await this.actionService.updateAction(
+      actionId,
+      update
+    );
+
+    const actions = workflow.actions.map(
+      ({ action: { _id, ...others }, order }) => {
+        if (_id === actionId) return { order, action: updatedAction };
+
+        return {
+          order,
+          action: { ...others, id: _id },
+        };
+      }
+    );
+
+    return {
+      id: workflow.id,
+      trigger: mapToTriggerResponseDto(workflow.trigger),
+      actions,
+      validFrom: workflow.validFrom || new Date(),
+      validTo: workflow.validTo,
+    };
   };
 
   private createActions = async (

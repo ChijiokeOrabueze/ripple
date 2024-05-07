@@ -15,4 +15,14 @@ export class ActionServiceImpl implements ActionService {
 
     return actions.map((action) => mapToActionResponseDto(action));
   };
+
+  updateAction = async (actionId: string, data: ActionRequestDto) => {
+    const action = await this.actionRepository.updateOne(data, [
+      { field: "id", value: actionId },
+    ]);
+
+    if (!action) throw new Error("Action not found");
+
+    return mapToActionResponseDto(action);
+  };
 }
