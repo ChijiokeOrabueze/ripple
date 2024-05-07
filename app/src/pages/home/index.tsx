@@ -4,17 +4,26 @@ import { Table } from "@/components/table";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
 import { PageTemplate } from "@/templates/page-template";
 import { Workflow } from "@/types/api";
-import React from "react";
+import React, { useMemo } from "react";
 
 export const Home = () => {
   const { data, isLoading, isError } = useEffectApiCall<undefined, Workflow[]>(
     "get",
-    "http://localhost:8080/workflows",
+    "http://localhost:8080/api/v1/workflows",
     undefined,
     []
   );
 
-  console.log({ data, isLoading, isError });
+  const workflows = useMemo(() => {
+    if (!data) return [];
+    return data.map(({ id, name, trigger, actions }) => ({
+      id,
+      workflow: name || id,
+      trigger: trigger.name,
+      action: actions.map(({ action }) => action.name).join(", "),
+    }));
+  }, [data]);
+
   return (
     <PageTemplate
       pageTitle="All workflows"
@@ -31,22 +40,11 @@ export const Home = () => {
       <div>
         <Table
           columns={[
-            { accessor: "desert", value: "Workflow" },
-            { accessor: "calories", value: "Trigger" },
-            { accessor: "fat", value: "Action" },
+            { accessor: "workflow", value: "Workflow" },
+            { accessor: "trigger", value: "Trigger" },
+            { accessor: "action", value: "Action" },
           ]}
-          rows={[
-            {
-              desert: "Frozen yoghurt",
-              calories: 45.0,
-              fat: 56.0,
-            },
-            {
-              desert: "Frozen yoghurt4",
-              calories: 45.0,
-              fat: 56.0,
-            },
-          ]}
+          rows={workflows}
           actionColumns={[
             {
               name: "Edit",
