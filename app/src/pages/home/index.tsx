@@ -4,6 +4,7 @@ import { Table } from "@/components/table";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
 import { PageTemplate } from "@/templates/page-template";
 import { Workflow } from "@/types/api";
+import { useRouter } from "next/navigation";
 import React, { useMemo } from "react";
 
 export const Home = () => {
@@ -13,6 +14,8 @@ export const Home = () => {
     undefined,
     []
   );
+
+  const router = useRouter();
 
   const workflows = useMemo(() => {
     if (!data) return [];
@@ -28,11 +31,7 @@ export const Home = () => {
     <PageTemplate
       pageTitle="All workflows"
       headerComponent={
-        <Button
-          onClick={() => {
-            console.log("hello");
-          }}
-        >
+        <Button onClick={() => router.push("/create-workflow")}>
           Create new workflow
         </Button>
       }
