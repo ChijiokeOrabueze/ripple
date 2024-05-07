@@ -12,13 +12,13 @@ export const PageTemplate = ({
   headerComponent,
 }: PageTemplateProps) => {
   return (
-    <div>
-      <div className="flex justify-between align-center">
-        <h1>{pageTitle}</h1>
+    <div className="p-5 w-[100vw] flex flex-col gap-10">
+      <div className="flex bg-primary w-full justify-between h-14 rounded-sm p-5 items-center">
+        <h1 className="font-bold text-lg">{pageTitle}</h1>
         {headerComponent}
       </div>
 
-      <div>{children}</div>
+      {children}
     </div>
   );
 };

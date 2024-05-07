@@ -8,6 +8,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { Button } from "./button";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,18 +35,28 @@ type TableColumn<T> = {
   value: string;
 };
 
-export interface TableProps<T> {
+type ActionColumn<T> = {
+  value: string;
+  name: string;
+  action: (data: T) => void;
+};
+
+export interface TableProps<T, Row = { [key in keyof T]: string | number }> {
   columns: TableColumn<T>[];
-  rows: { [key in keyof T]: React.ReactNode }[];
+  rows: Row[];
+  actionColumns?: ActionColumn<Row>[];
 }
 
-export function Table<T>({ columns, rows }: TableProps<T>) {
+export function Table<T>({ columns, rows, actionColumns }: TableProps<T>) {
   return (
     <TableContainer component={Paper}>
       <MuiTable sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
+        <TableHead className="border">
           <TableRow>
-            {columns.map(({ value }, index) => (
+            {columns.map(({ value }) => (
+              <StyledTableCell key={value}>{value}</StyledTableCell>
+            ))}
+            {actionColumns?.map(({ value }) => (
               <StyledTableCell key={value}>{value}</StyledTableCell>
             ))}
           </TableRow>
@@ -56,6 +67,11 @@ export function Table<T>({ columns, rows }: TableProps<T>) {
               {columns.map(({ accessor }, colIndex) => (
                 <StyledTableCell key={colIndex} scope="row">
                   {row[accessor]}
+                </StyledTableCell>
+              ))}
+              {actionColumns?.map(({ value, name, action }, actionIndex) => (
+                <StyledTableCell key={actionIndex} scope="row">
+                  <Button onClick={() => action(row)}>{name}</Button>
                 </StyledTableCell>
               ))}
             </StyledTableRow>
