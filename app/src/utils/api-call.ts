@@ -4,7 +4,7 @@ export type SuccessResponse<T> = { code: 200 | 201; data: T };
 
 export type ErrorResponse = { code: number; error: unknown; message: string };
 
-const constructRequest = <T>(method: RequestMethod, payload: T) => {
+const constructRequest = <T>(method: RequestMethod, payload?: T) => {
   const headers = new Headers({
     "Content-Type": "application/json",
   });
@@ -25,7 +25,7 @@ const constructRequest = <T>(method: RequestMethod, payload: T) => {
 export const makeApiCall = async <T, R>(
   method: RequestMethod,
   url: string,
-  payload: T
+  payload?: T
 ) => {
   try {
     const request = constructRequest(method, payload);
