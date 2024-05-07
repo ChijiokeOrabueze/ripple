@@ -1,4 +1,4 @@
-import { FilterQuery, Model, Types, UpdateQuery } from "mongoose";
+import { FilterQuery, Model, UpdateQuery } from "mongoose";
 import { Filter, Op, PopulatePath } from "./types";
 
 export abstract class Repo<T, K = unknown> {
@@ -38,12 +38,16 @@ export abstract class Repo<T, K = unknown> {
       if (typeof path === "string") {
         return {
           path,
+          options: { lean: true },
         };
       }
 
       return {
         path: path.pathName,
-        populate: path.innerPaths.map((innerPath) => ({ path: innerPath })),
+        populate: path.innerPaths.map((innerPath) => ({
+          path: innerPath,
+          options: { lean: true },
+        })),
       };
     });
     return this.toBulkExternal(

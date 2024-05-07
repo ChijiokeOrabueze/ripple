@@ -1,10 +1,20 @@
 "use client";
 import { Button } from "@/components/button";
 import { Table } from "@/components/table";
+import { useEffectApiCall } from "@/hooks/use-effect-api-call";
 import { PageTemplate } from "@/templates/page-template";
+import { Workflow } from "@/types/api";
 import React from "react";
 
 export const Home = () => {
+  const { data, isLoading, isError } = useEffectApiCall<undefined, Workflow[]>(
+    "get",
+    "http://localhost:8080/workflows",
+    undefined,
+    []
+  );
+
+  console.log({ data, isLoading, isError });
   return (
     <PageTemplate
       pageTitle="All workflows"
