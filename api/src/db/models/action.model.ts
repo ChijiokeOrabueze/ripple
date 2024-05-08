@@ -1,4 +1,4 @@
-import { Schema, Types } from "mongoose";
+import { Schema } from "mongoose";
 import { IAudit, auditSchema } from "./shared";
 import { model } from "mongoose";
 
@@ -22,8 +22,8 @@ const actionParamSchema = new Schema<IActionParam>(
 );
 
 const actionSchema = new Schema<IAction>({
-  url: { type: String, required: true, unique: true },
-  name: { type: String, required: true, unique: true },
+  url: { type: String, required: true },
+  name: { type: String, required: true },
   params: [actionParamSchema],
 }).add(auditSchema);
 

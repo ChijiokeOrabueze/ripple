@@ -22,11 +22,11 @@ export interface WorkflowPopulate {
 
 const WorkflowActionSchema = new Schema<IWorkflowAction>({
   action: { type: Schema.Types.ObjectId, ref: "Action" },
-  order: { type: Number, unique: true },
+  order: { type: Number },
 });
 
 const WorkflowSchema = new Schema<IWorkflow>({
-  name: { type: String, unique: true },
+  name: { type: String },
   trigger: { type: Schema.Types.ObjectId, ref: "Trigger" },
   actions: [WorkflowActionSchema],
 }).add(auditSchema);
