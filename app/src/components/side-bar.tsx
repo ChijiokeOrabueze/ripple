@@ -8,6 +8,7 @@ export interface SideBarProps {
   currentWorkflowComponent: WorkflowComponent;
   allTriggers: Trigger[];
   selectedTrigger?: Trigger;
+  isInEditMode: boolean;
   setCurrentWorkflowComponent: (
     component: WorkflowComponent,
     resetNextAction?: boolean
@@ -18,6 +19,7 @@ export const SideBar = ({
   currentWorkflowComponent,
   allTriggers,
   selectedTrigger,
+  isInEditMode,
   setCurrentWorkflowComponent,
 }: SideBarProps) => {
   return (
@@ -26,6 +28,7 @@ export const SideBar = ({
         <TriggerSideBar
           currentWorkflowComponent={currentWorkflowComponent}
           allTriggers={allTriggers}
+          isInEditMode={isInEditMode}
           setCurrentWorkflowComponent={setCurrentWorkflowComponent}
         />
       ) : selectedTrigger ? (

@@ -94,7 +94,7 @@ export class WorkflowServiceImpl implements WorkflowService {
     if (!workflow) throw new Error("workflow not found");
 
     const targetActionExists = workflow.actions.some(
-      ({ action }) => action._id === actionId
+      ({ action }) => String(action._id) === actionId
     );
 
     if (!targetActionExists) throw new Error("Action not found");
@@ -106,7 +106,7 @@ export class WorkflowServiceImpl implements WorkflowService {
 
     const actions = workflow.actions.map(
       ({ action: { _id, ...others }, order }) => {
-        if (_id === actionId) return { order, action: updatedAction };
+        if (String(_id) === actionId) return { order, action: updatedAction };
 
         return {
           order,

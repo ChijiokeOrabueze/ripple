@@ -7,6 +7,7 @@ import { Select } from "./select";
 export interface TriggerSideBarProps {
   currentWorkflowComponent: WorkflowTriggerComponent;
   allTriggers: Trigger[];
+  isInEditMode: boolean;
   setCurrentWorkflowComponent: (
     component: WorkflowComponent,
     resetNextAction?: boolean
@@ -16,6 +17,7 @@ export interface TriggerSideBarProps {
 export const TriggerSideBar = ({
   currentWorkflowComponent,
   allTriggers,
+  isInEditMode,
   setCurrentWorkflowComponent,
 }: TriggerSideBarProps) => {
   const triggerOptions = useMemo(() => {

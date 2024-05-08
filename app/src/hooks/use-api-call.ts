@@ -13,21 +13,21 @@ export const useApiCall = <T, R>(method: RequestMethod, url: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const run = async (payload?: T) => {
+  const run = async (payload?: T, urlAppendage?: string) => {
     setIsLoading(true);
     setIsError(false);
 
-    const response = await makeApiCall<T, R>(method, url, payload);
+    const response = await makeApiCall<T, R>(
+      method,
+      `${url}${urlAppendage || ""}`,
+      payload
+    );
 
     setIsLoading(false);
 
     if (isOkResponse(response)) return response.data;
 
-    if (
-      handleErrors(response, (message: string) => {
-        notifyError;
-      }) === "failed"
-    ) {
+    if (handleErrors(response, notifyError) === "failed") {
       setIsError(true);
     }
   };

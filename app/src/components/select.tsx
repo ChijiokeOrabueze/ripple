@@ -16,11 +16,13 @@ export interface SelectProps {
   label: string;
   placeholder?: string;
   options: SelectOption[];
+  isDisabled?: boolean;
   onChange: (value: SelectOption) => void;
 }
 
 export const Select = ({
   value,
+  isDisabled,
   label,
   placeholder,
   options,
@@ -45,6 +47,7 @@ export const Select = ({
             }
           }}
           placeholder={placeholder}
+          disabled={isDisabled}
           onChange={handleChange}
         >
           {options.map(({ value, name }) => (

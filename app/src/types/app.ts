@@ -5,10 +5,11 @@ export type WorkflowTriggerComponent = {
   selectedValue?: Trigger;
   isDisabled?: boolean;
 };
+export type WorkflowActionValue = Partial<Action>;
 
 export type WorkflowActionComponent = {
   type: "action";
-  selectedValue?: Partial<Omit<Action, "id">>;
+  selectedValue?: WorkflowActionValue;
   isDisabled?: boolean;
 };
 

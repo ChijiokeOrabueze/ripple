@@ -54,9 +54,7 @@ export const Home = () => {
             {
               name: "Edit",
               value: "CTA",
-              action: (data) => {
-                console.log(data);
-              },
+              action: ({ id }) => router.push(`/workflows/${id}`),
             },
           ]}
         />

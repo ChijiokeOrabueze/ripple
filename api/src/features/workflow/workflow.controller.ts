@@ -49,11 +49,11 @@ export class WorkflowController {
   };
 
   getWorkflow = async (
-    req: Request<{}, {}, {}, { id: string }>,
+    req: Request<{ id: string }, {}, {}, {}>,
     res: Response
   ) => {
     try {
-      const result = await this.workflowService.getWorkflow(req.query.id);
+      const result = await this.workflowService.getWorkflow(req.params.id);
       const response = constructResponse(
         result,
         "Workflow fetched successfully"

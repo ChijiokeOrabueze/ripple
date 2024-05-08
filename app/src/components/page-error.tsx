@@ -6,7 +6,7 @@ export interface PageErrorProps {
 
 export const PageError = ({ error }: PageErrorProps) => {
   return (
-    <div className="h-full w-full">
+    <div className="h-[100vh] w-full">
       <p>
         {error ||
           "An error occured while trying to fetch data. Please check your network connection and try again."}

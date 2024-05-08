@@ -4,17 +4,28 @@ import { PageLoader } from "@/components/page-loader";
 import { SideBar } from "@/components/side-bar";
 import { useApiCall } from "@/hooks/use-api-call";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
-import { ActionRequest, Trigger } from "@/types/api";
-import { WorkflowComponent } from "@/types/app";
+import { Action, ActionRequest, Trigger, Workflow } from "@/types/api";
+import { WorkflowActionValue, WorkflowComponent } from "@/types/app";
 import { notifyError } from "@/utils/notify";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
+import { isActionChanged } from "./utils";
 
-export const WorkflowPage = () => {
+export interface WorkflowPageProps {
+  incomingComponents?: { components: WorkflowComponent[]; workflowId: string };
+}
+
+export const WorkflowPage = ({ incomingComponents }: WorkflowPageProps) => {
+  const isInEditMode = !!incomingComponents;
   const [step, setStep] = useState(0);
   const [workflowComponents, setWorkflowComponents] = useState<
     WorkflowComponent[]
-  >([{ type: "trigger", isDisabled: true }, { type: "action" }]);
+  >(
+    incomingComponents?.components || [
+      { type: "trigger", isDisabled: true },
+      { type: "action" },
+    ]
+  );
 
   const { data, isLoading, isError } = useEffectApiCall<undefined, Trigger[]>(
     "get",
@@ -23,8 +34,13 @@ export const WorkflowPage = () => {
     []
   );
 
-  const createWorkflowApiCall = useApiCall(
+  const createWorkflowApiCall = useApiCall<unknown, Workflow>(
     "post",
+    process.env.WORKFLOW_ROOT_URL
+  );
+
+  const editWorkflowApiCall = useApiCall<unknown, Workflow>(
+    "put",
     process.env.WORKFLOW_ROOT_URL
   );
 
@@ -44,7 +60,7 @@ export const WorkflowPage = () => {
     return prevTrigger;
   }, [workflowComponents, data]);
 
-  const createWorkflow = async () => {
+  const createOrEditWorkflow = async () => {
     let trigger = "";
     const actions: ActionRequest[] = [];
     let error = "";
@@ -85,9 +101,34 @@ export const WorkflowPage = () => {
       return;
     }
 
-    await createWorkflowApiCall.run({ trigger, actions });
+    if (isInEditMode) {
+      const incomingActions: WorkflowActionValue[] = [];
+      incomingComponents.components.forEach(({ type, selectedValue }) => {
+        if (type === "action" && selectedValue)
+          incomingActions.push(selectedValue);
+      });
+      if (!isActionChanged(incomingActions[0], actions[0]))
+        return notifyError("Nothing has changed");
 
-    if (!createWorkflowApiCall.isError) router.push("/");
+      const actionId = incomingActions[0].id;
+      if (!actionId) return;
+
+      const editResponse = await editWorkflowApiCall.run(
+        actions[0],
+        `/${incomingComponents.workflowId}/${actionId}`
+      );
+
+      if (editResponse) router.push("/");
+
+      return;
+    }
+
+    const createResponse = await createWorkflowApiCall.run({
+      trigger,
+      actions,
+    });
+
+    if (createResponse) router.push("/");
   };
 
   if (isLoading) return <PageLoader />;
@@ -104,8 +145,10 @@ export const WorkflowPage = () => {
             if (incomingStep > step && !selectedTrigger) return;
             setStep(incomingStep);
           }}
-          onSave={createWorkflow}
-          isSaveLoading={createWorkflowApiCall.isLoading}
+          onSave={createOrEditWorkflow}
+          isSaveLoading={
+            createWorkflowApiCall.isLoading || editWorkflowApiCall.isLoading
+          }
         />
       </div>
       <SideBar
@@ -124,6 +167,7 @@ export const WorkflowPage = () => {
 
           setWorkflowComponents(components);
         }}
+        isInEditMode={isInEditMode}
       />
     </div>
   );
