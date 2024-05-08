@@ -10,7 +10,7 @@ import React, { useMemo } from "react";
 export const Home = () => {
   const { data, isLoading, isError } = useEffectApiCall<undefined, Workflow[]>(
     "get",
-    "http://localhost:8080/api/v1/workflows",
+    process.env.WORKFLOW_ROOT_URL,
     undefined,
     []
   );

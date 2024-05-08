@@ -8,7 +8,10 @@ export interface SideBarProps {
   currentWorkflowComponent: WorkflowComponent;
   allTriggers: Trigger[];
   selectedTrigger?: Trigger;
-  setCurrentWorkflowComponent: (component: WorkflowComponent) => void;
+  setCurrentWorkflowComponent: (
+    component: WorkflowComponent,
+    resetNextAction?: boolean
+  ) => void;
 }
 
 export const SideBar = ({

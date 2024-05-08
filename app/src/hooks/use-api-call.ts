@@ -1,24 +1,19 @@
 import {
   RequestMethod,
-  SuccessResponse,
   handleErrors,
   isOkResponse,
   makeApiCall,
 } from "@/utils/api-call";
-import { notify } from "@/utils/notify";
+import { notifyError } from "@/utils/notify";
 import { useState } from "react";
 
 export interface UseApiCallProps {}
 
-export const useApiCall = <T, R>(
-  method: RequestMethod,
-  url: string,
-  payload?: T
-) => {
+export const useApiCall = <T, R>(method: RequestMethod, url: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const run = async () => {
+  const run = async (payload?: T) => {
     setIsLoading(true);
     setIsError(false);
 
@@ -30,7 +25,7 @@ export const useApiCall = <T, R>(
 
     if (
       handleErrors(response, (message: string) => {
-        notify("error", message);
+        notifyError;
       }) === "failed"
     ) {
       setIsError(true);

@@ -8,11 +8,11 @@ export const useEffectApiCall = <T, R>(
   payload?: T,
   deps?: DependencyList
 ) => {
-  const { isLoading, isError, run } = useApiCall<T, R>(method, url, payload);
+  const { isLoading, isError, run } = useApiCall<T, R>(method, url);
   const [data, setData] = useState<R>();
   useEffect(() => {
     const makeCall = async () => {
-      const result = await run();
+      const result = await run(payload);
 
       if (result) setData(result);
     };

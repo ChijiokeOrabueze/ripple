@@ -1,11 +1,11 @@
-import { Button } from "@/components/button";
 import { Canvas } from "@/components/canvas";
-import { Input } from "@/components/input";
-import { Select, SelectOption } from "@/components/select";
 import { SideBar } from "@/components/side-bar";
+import { useApiCall } from "@/hooks/use-api-call";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
-import { Trigger } from "@/types/api";
+import { ActionRequest, Trigger } from "@/types/api";
 import { WorkflowComponent } from "@/types/app";
+import { notifyError } from "@/utils/notify";
+import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 
 export const WorkflowPage = () => {
@@ -16,12 +16,17 @@ export const WorkflowPage = () => {
 
   const { data, isLoading, isError } = useEffectApiCall<undefined, Trigger[]>(
     "get",
-    "http://localhost:8080/api/v1/triggers",
+    process.env.TRIGGER_ROOT_URL,
     undefined,
     []
   );
 
-  console.log(workflowComponents);
+  const createWorkflowApiCall = useApiCall(
+    "post",
+    process.env.WORKFLOW_ROOT_URL
+  );
+
+  const router = useRouter();
 
   const selectedTrigger = useMemo(() => {
     let prevTrigger: Trigger | undefined = undefined;
@@ -37,23 +42,79 @@ export const WorkflowPage = () => {
     return prevTrigger;
   }, [workflowComponents, data]);
 
+  const createWorkflow = async () => {
+    let trigger = "";
+    const actions: ActionRequest[] = [];
+    let error = "";
+
+    workflowComponents.every((item) => {
+      if (item.type === "trigger") {
+        trigger = item.selectedValue?.id || "";
+        return true;
+      }
+
+      if (!item.selectedValue || !item.selectedValue.name) {
+        error = "Please select action to proceed.";
+        return false;
+      }
+
+      if (!item.selectedValue.url) {
+        error = `Please add url for action "${item.selectedValue.name}"`;
+        return false;
+      }
+
+      const params =
+        item.selectedValue.params?.filter(({ name, value }) => name && value) ||
+        [];
+
+      actions.push({
+        params,
+        name: item.selectedValue.name,
+        url: item.selectedValue.url,
+        order: actions.length + 1,
+      });
+      return true;
+    });
+
+    if (!trigger) error = "Please select trigger.";
+
+    if (error) {
+      notifyError(error);
+      return;
+    }
+
+    await createWorkflowApiCall.run({ trigger, actions });
+
+    if (!createWorkflowApiCall.isError) router.push("/");
+  };
+
   return (
     <div className="w-full h-full flex">
       <div className="grow">
         <Canvas
           currentStep={step}
           workflowComponents={workflowComponents}
-          setStep={(step) => setStep(step)}
+          setStep={(incomingStep) => {
+            if (incomingStep > step && !selectedTrigger) return;
+            setStep(incomingStep);
+          }}
+          onSave={createWorkflow}
+          isSaveLoading={createWorkflowApiCall.isLoading}
         />
       </div>
       <SideBar
         currentWorkflowComponent={workflowComponents[step]}
         allTriggers={data!}
         selectedTrigger={selectedTrigger}
-        setCurrentWorkflowComponent={(component) => {
-          const components = workflowComponents.map((prev, index) =>
-            index === step ? component : prev
-          );
+        setCurrentWorkflowComponent={(component, resetNextActions) => {
+          const components = workflowComponents.map((prev, index) => {
+            if (index === step) return component;
+
+            if (resetNextActions && prev.type === "action")
+              return { ...prev, selectedValue: undefined };
+
+            return prev;
+          });
 
           setWorkflowComponents(components);
         }}

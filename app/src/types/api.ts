@@ -37,3 +37,10 @@ export type Workflow = Validity & {
   trigger: Trigger;
   actions: WorkflowAction[];
 };
+
+export type ActionRequest = {
+  url: string;
+  name: string;
+  params: ActionParam[];
+  order: number;
+};

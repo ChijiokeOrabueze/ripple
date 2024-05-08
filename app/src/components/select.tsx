@@ -30,17 +30,20 @@ export const Select = ({
     onChange(event.target);
   };
 
-  console.log(value);
-
   return (
     <Box sx={{ minWidth: 120 }}>
       <InputLabel>{label}</InputLabel>
-      <FormControl fullWidth>
+      <FormControl disabled={false} fullWidth>
         <PrimitiveSelect
+          id="select-ui"
           size="small"
-          defaultValue={value?.name}
           value={value?.name}
           label={label}
+          renderValue={(selected) => {
+            if (selected) {
+              return value?.name;
+            }
+          }}
           placeholder={placeholder}
           onChange={handleChange}
         >

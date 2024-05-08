@@ -7,7 +7,10 @@ import { Select } from "./select";
 export interface TriggerSideBarProps {
   currentWorkflowComponent: WorkflowTriggerComponent;
   allTriggers: Trigger[];
-  setCurrentWorkflowComponent: (component: WorkflowComponent) => void;
+  setCurrentWorkflowComponent: (
+    component: WorkflowComponent,
+    resetNextAction?: boolean
+  ) => void;
 }
 
 export const TriggerSideBar = ({
@@ -31,13 +34,16 @@ export const TriggerSideBar = ({
         }
         options={triggerOptions}
         onChange={(value) => {
-          const selectedValue = allTriggers?.find(
+          const newSelectedValue = allTriggers?.find(
             ({ id }) => id === value.value
           );
-          setCurrentWorkflowComponent({
-            type: "trigger",
-            selectedValue,
-          });
+          setCurrentWorkflowComponent(
+            {
+              type: "trigger",
+              selectedValue: newSelectedValue,
+            },
+            newSelectedValue?.id !== selectedValue?.id
+          );
         }}
       />
       <Input disabled label="Url" value={selectedValue?.url} />

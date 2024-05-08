@@ -6,13 +6,17 @@ import { WorkflowComponent } from "@/types/app";
 export interface CanvasProps {
   currentStep: number;
   workflowComponents: WorkflowComponent[];
+  isSaveLoading?: boolean;
   setStep: (step: number) => void;
+  onSave: () => void;
 }
 
 export const Canvas = ({
   currentStep,
-  setStep,
   workflowComponents,
+  isSaveLoading,
+  setStep,
+  onSave,
 }: CanvasProps) => {
   return (
     <div className="flex flex-col gap-5 justify-center items-center">
@@ -48,10 +52,9 @@ export const Canvas = ({
           />
         );
       })}
-      {/* <CanvasCard name="Canvas1" state="past" value="hand" onClick={() => {}} />
-      <CanvasCard name="Canvas2" state="current" onClick={() => {}} />
-      <CanvasCard name="Canvas3" state="inFront" onClick={() => {}} /> */}
-      <Button>Save</Button>
+      <Button isLoading={isSaveLoading} onClick={onSave}>
+        Save
+      </Button>
     </div>
   );
 };
