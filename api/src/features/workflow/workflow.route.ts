@@ -14,6 +14,8 @@ export const workflowRouter = () => {
     .post(workflowController.createWorkflow)
     .get(workflowController.getWorkflows);
 
+  router.route("/:id").get(workflowController.getWorkflow);
+
   router
     .route("/:workflowId/:actionId")
     .put(workflowController.updateWorkflowAction);

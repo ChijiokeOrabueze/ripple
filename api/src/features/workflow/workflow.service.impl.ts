@@ -5,7 +5,7 @@ import { ActionService } from "../action/action.service";
 import { TriggerResponseDto } from "../trigger/trigger.dto";
 import { mapToTriggerResponseDto } from "../trigger/trigger.mappers";
 import { TriggerService } from "../trigger/trigger.service";
-import { CreateWorkflowRequestDto } from "./workflow.dto";
+import { CreateWorkflowRequestDto, GetWorkflowIdType } from "./workflow.dto";
 import { WorkflowService } from "./workflow.service";
 
 export class WorkflowServiceImpl implements WorkflowService {
@@ -50,9 +50,14 @@ export class WorkflowServiceImpl implements WorkflowService {
     };
   };
 
-  getWorkflows = async (triggerId?: string) => {
+  getWorkflows = async (
+    id?: string,
+    idType: GetWorkflowIdType = "triggerId"
+  ) => {
+    const field = idType === "triggerId" ? "trigger" : "id";
+
     const workflows = await this.workflowRepository.findManyAndPopulate(
-      triggerId ? [{ field: "trigger", value: triggerId }] : []
+      id ? [{ field, value: id }] : []
     );
 
     return workflows.map((workflow) => ({
@@ -67,6 +72,14 @@ export class WorkflowServiceImpl implements WorkflowService {
       validFrom: workflow.validFrom || new Date(),
       validTo: workflow.validTo,
     }));
+  };
+
+  getWorkflow = async (id: string) => {
+    const [workflow] = await this.getWorkflows(id, "workflowId");
+
+    if (!workflow) throw new Error("workflow not found");
+
+    return workflow;
   };
 
   editWorkflowAction = async (

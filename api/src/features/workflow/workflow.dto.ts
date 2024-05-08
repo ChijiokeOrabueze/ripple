@@ -19,3 +19,5 @@ export type CreateWorkflowRequestDto = {
   trigger: string;
   actions: (ActionRequestDto & { order: number })[];
 };
+
+export type GetWorkflowIdType = "triggerId" | "workflowId";

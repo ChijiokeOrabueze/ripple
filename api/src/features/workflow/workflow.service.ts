@@ -13,4 +13,6 @@ export interface WorkflowService {
     actionId: string,
     update: ActionRequestDto
   ) => Promise<WorkflowResponseDto>;
+
+  getWorkflow: (id: string) => Promise<WorkflowResponseDto>;
 }
