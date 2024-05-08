@@ -1,3 +1,4 @@
+import { ApiError } from "../../error";
 import { generateId } from "../../repositories/utils";
 import { WorkflowRepository } from "../../repositories/workflow.repository";
 import { ActionRequestDto } from "../action/action.dto";
@@ -26,7 +27,8 @@ export class WorkflowServiceImpl implements WorkflowService {
   createWorkflow = async (data: CreateWorkflowRequestDto) => {
     const trigger = await this.triggerService.getTrigger(data.trigger);
 
-    if (!trigger) throw new Error("Trigger not found");
+    if (!trigger)
+      throw new ApiError({ errorType: "itemNotFound", appendage: "Trigger" });
 
     const actions = await this.createActions(data.actions, trigger);
 
@@ -77,7 +79,8 @@ export class WorkflowServiceImpl implements WorkflowService {
   getWorkflow = async (id: string) => {
     const [workflow] = await this.getWorkflows(id, "workflowId");
 
-    if (!workflow) throw new Error("workflow not found");
+    if (!workflow)
+      throw new ApiError({ errorType: "itemNotFound", appendage: "Workflow" });
 
     return workflow;
   };
@@ -91,13 +94,15 @@ export class WorkflowServiceImpl implements WorkflowService {
       { field: "id", value: workflowId },
     ]);
 
-    if (!workflow) throw new Error("workflow not found");
+    if (!workflow)
+      new ApiError({ errorType: "itemNotFound", appendage: "Workflow" });
 
     const targetActionExists = workflow.actions.some(
       ({ action }) => String(action._id) === actionId
     );
 
-    if (!targetActionExists) throw new Error("Action not found");
+    if (!targetActionExists)
+      new ApiError({ errorType: "itemNotFound", appendage: "Action" });
 
     const updatedAction = await this.actionService.updateAction(
       actionId,
@@ -144,8 +149,7 @@ export class WorkflowServiceImpl implements WorkflowService {
       return action;
     });
 
-    if (isIncompleteParam)
-      throw new Error("Trigger and action is incompatible");
+    if (isIncompleteParam) throw new ApiError("incompatibleTriggerAction");
 
     const createdActions = await this.actionService.createActions(
       actionsToCreate

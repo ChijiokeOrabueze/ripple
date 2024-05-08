@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TriggerService } from "./trigger.service";
-import { constructResponse } from "../../utils";
+import { constructErrorResponse, constructResponse } from "../../utils";
 
 export class TriggerController {
   private readonly triggerService: TriggerService;
@@ -18,8 +18,8 @@ export class TriggerController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 }

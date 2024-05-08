@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { WorkflowService } from "./workflow.service";
-import { constructResponse } from "../../utils";
+import { constructErrorResponse, constructResponse } from "../../utils";
 import { CreateWorkflowRequestDto } from "./workflow.dto";
 import { ActionRequestDto } from "../action/action.dto";
 
@@ -24,8 +24,8 @@ export class WorkflowController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 
@@ -43,8 +43,8 @@ export class WorkflowController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 
@@ -60,8 +60,8 @@ export class WorkflowController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 
@@ -86,8 +86,8 @@ export class WorkflowController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 }

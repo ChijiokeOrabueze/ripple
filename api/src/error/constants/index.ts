@@ -32,6 +32,14 @@ export const staticCustomErrorMap: StaticCustomErrorMap = {
     status: 401,
     message: "Invalid credentials",
   },
+  incompleteTriggerParams: {
+    status: 403,
+    message: "Incomplete trigger params",
+  },
+  incompatibleTriggerAction: {
+    status: 403,
+    message: "Trigger and action is incompatible",
+  },
 };
 
 export const dynamicCustomErrorMap: DynamicCustomErrorMap = {

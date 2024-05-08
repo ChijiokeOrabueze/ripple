@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ClientService } from "./client.service";
-import { constructResponse } from "../../utils";
+import { constructErrorResponse, constructResponse } from "../../utils";
 
 export class ClientController {
   private readonly clientService: ClientService;
@@ -24,8 +24,8 @@ export class ClientController {
       );
       res.status(response.code).json(response);
     } catch (err: any) {
-      console.log({ err });
-      res.status(400).send(err);
+      const error = constructErrorResponse(err);
+      res.status(error.code).send(error);
     }
   };
 }

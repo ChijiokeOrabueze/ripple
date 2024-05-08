@@ -1,3 +1,4 @@
+import { ApiError } from "../../error";
 import { ActionRepository } from "../../repositories/action.repository";
 import { ActionRequestDto } from "./action.dto";
 import { mapToActionResponseDto } from "./action.mappers";
@@ -21,7 +22,8 @@ export class ActionServiceImpl implements ActionService {
       { field: "id", value: actionId },
     ]);
 
-    if (!action) throw new Error("Action not found");
+    if (!action)
+      throw new ApiError({ errorType: "itemNotFound", appendage: "Action" });
 
     return mapToActionResponseDto(action);
   };

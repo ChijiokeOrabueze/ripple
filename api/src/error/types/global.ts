@@ -4,7 +4,9 @@ export type StaticCustomError =
   | "unauthorized"
   | "unauthorizedForAction"
   | "systemError"
-  | "invalidCredentials";
+  | "invalidCredentials"
+  | "incompleteTriggerParams"
+  | "incompatibleTriggerAction";
 
 export type DynamicCustomErrorType =
   | "itemNotFound"

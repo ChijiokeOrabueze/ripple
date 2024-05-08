@@ -1,3 +1,4 @@
+import { ApiError } from "../../error";
 import { TriggerService } from "../trigger/trigger.service";
 import { WorkflowResponseDto } from "../workflow/workflow.dto";
 import { WorkflowService } from "../workflow/workflow.service";
@@ -23,10 +24,11 @@ export class ClientServiceImpl implements ClientService {
   ) => {
     const trigger = await this.triggerService.getTriggerByName(triggerName);
 
-    if (!trigger) throw new Error("Trigger not found");
+    if (!trigger)
+      throw new ApiError({ errorType: "itemNotFound", appendage: "Trigger" });
 
     if (!this.triggerService.incomingDataMatchesTrigger(data, trigger))
-      throw new Error("Incomplete trigger params");
+      throw new ApiError("incompleteTriggerParams");
 
     const triggerWorkflows = await this.workflowService.getWorkflows(
       trigger.id
