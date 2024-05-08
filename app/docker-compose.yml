@@ -1,0 +1,12 @@
+version: "3.3"
+services:
+  ripple-web:
+    build: ./
+    ports:
+      - "3000:3000"
+    networks:
+      - ripple-web
+
+networks:
+  ripple-web:
+    driver: bridge
