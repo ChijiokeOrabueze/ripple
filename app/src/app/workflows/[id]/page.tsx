@@ -1,4 +1,5 @@
 "use client";
+import { Button } from "@/components/button";
 import { PageError } from "@/components/page-error";
 import { PageLoader } from "@/components/page-loader";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
@@ -33,7 +34,10 @@ const Page = () => {
   const components = convertWorkflowResponseToWorkflowComponents(data);
 
   return (
-    <PageTemplate pageTitle="Edit workflow">
+    <PageTemplate
+      pageTitle="Edit workflow"
+      headerComponent={<Button onClick={() => router.push("/")}>Home</Button>}
+    >
       <WorkflowPage incomingComponents={{ components, workflowId: data.id }} />
     </PageTemplate>
   );

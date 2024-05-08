@@ -4,7 +4,7 @@ import { PageLoader } from "@/components/page-loader";
 import { SideBar } from "@/components/side-bar";
 import { useApiCall } from "@/hooks/use-api-call";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
-import { Action, ActionRequest, Trigger, Workflow } from "@/types/api";
+import { ActionRequest, Trigger, Workflow } from "@/types/api";
 import { WorkflowActionValue, WorkflowComponent } from "@/types/app";
 import { notifyError } from "@/utils/notify";
 import { useRouter } from "next/navigation";
