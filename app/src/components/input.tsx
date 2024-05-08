@@ -8,17 +8,25 @@ export interface InputProps {
   value?: string;
   label: string;
   placeholder?: string;
-  onChange: (value: string) => void;
+  disabled?: boolean;
+  onChange?: (value: string) => void;
 }
 
-export const Input = ({ value, label, placeholder, onChange }: InputProps) => {
+export const Input = ({
+  disabled,
+  value,
+  label,
+  placeholder,
+  onChange,
+}: InputProps) => {
   return (
     <Box component="form" noValidate autoComplete="off">
       <InputLabel>{label}</InputLabel>
       <TextField
         fullWidth
         size="small"
-        value={value}
+        disabled={disabled}
+        value={value || ""}
         placeholder={placeholder}
         variant="outlined"
         onChange={(e) => {

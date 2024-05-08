@@ -30,12 +30,15 @@ export const Select = ({
     onChange(event.target);
   };
 
+  console.log(value);
+
   return (
     <Box sx={{ minWidth: 120 }}>
       <InputLabel>{label}</InputLabel>
       <FormControl fullWidth>
         <PrimitiveSelect
           size="small"
+          defaultValue={value?.name}
           value={value?.name}
           label={label}
           placeholder={placeholder}

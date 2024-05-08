@@ -12,8 +12,8 @@ export const PageTemplate = ({
   headerComponent,
 }: PageTemplateProps) => {
   return (
-    <div className="p-5 w-[100vw] flex flex-col gap-10">
-      <div className="flex bg-primary w-full justify-between h-14 rounded-sm p-5 items-center">
+    <div className="p-5 max-w-[100vw] flex flex-col gap-10">
+      <div className="flex bg-primary w-full justify-between h-20 rounded-md p-5 items-center">
         <h1 className="font-bold text-lg">{pageTitle}</h1>
         {headerComponent}
       </div>
