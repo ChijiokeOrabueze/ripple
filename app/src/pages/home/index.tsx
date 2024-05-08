@@ -1,5 +1,7 @@
 "use client";
 import { Button } from "@/components/button";
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
 import { Table } from "@/components/table";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
 import { PageTemplate } from "@/templates/page-template";
@@ -26,6 +28,10 @@ export const Home = () => {
       action: actions.map(({ action }) => action.name).join(", "),
     }));
   }, [data]);
+
+  if (isLoading) return <PageLoader />;
+
+  if (isError) return <PageError />;
 
   return (
     <PageTemplate

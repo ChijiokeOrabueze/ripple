@@ -21,7 +21,7 @@ export const SideBar = ({
   setCurrentWorkflowComponent,
 }: SideBarProps) => {
   return (
-    <div className="flex flex-col gap-8 h-[100vh] w-[407px] p-5 flex-none border-2 rounded-md border-primary">
+    <div className="flex flex-col gap-8 min-h-[70vh] w-[407px] p-5 flex-none border-2 rounded-md border-primary">
       {currentWorkflowComponent.type === "trigger" ? (
         <TriggerSideBar
           currentWorkflowComponent={currentWorkflowComponent}

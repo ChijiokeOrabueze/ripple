@@ -1,4 +1,6 @@
 import { Canvas } from "@/components/canvas";
+import { PageError } from "@/components/page-error";
+import { PageLoader } from "@/components/page-loader";
 import { SideBar } from "@/components/side-bar";
 import { useApiCall } from "@/hooks/use-api-call";
 import { useEffectApiCall } from "@/hooks/use-effect-api-call";
@@ -87,6 +89,10 @@ export const WorkflowPage = () => {
 
     if (!createWorkflowApiCall.isError) router.push("/");
   };
+
+  if (isLoading) return <PageLoader />;
+
+  if (isError) return <PageError />;
 
   return (
     <div className="w-full h-full flex">
