@@ -1,4 +1,4 @@
-name: ci
+name: cicd
 
 on:
   push:
@@ -41,12 +41,12 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Trigger API deploy
-        run: aws ecs update-service --cluster ${{ env.AWS_API_CLUSTER_NAME }} --service ${{ env.AWS_API_SERVICE_NAME }} --force-new-deployment --region ${{ env.AWS_REGION }}
+        run: aws ecs update-service --cluster ${{ secrets.AWS_API_CLUSTER_NAME }} --service ${{ secrets.AWS_API_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
 
       - name: Trigger APP deploy
-        run: aws ecs update-service --cluster ${{ env.AWS_APP_CLUSTER_NAME }} --service ${{ env.AWS_APP_SERVICE_NAME }} --force-new-deployment --region ${{ env.AWS_REGION }}
+        run: aws ecs update-service --cluster ${{ secrets.AWS_APP_CLUSTER_NAME }} --service ${{ secrets.AWS_APP_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
 
     
