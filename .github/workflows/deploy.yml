@@ -35,3 +35,18 @@ jobs:
           context: ./app
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}-app:latest
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Trigger API deploy
+        run: aws ecs update-service --cluster ${{ env.AWS_API_CLUSTER_NAME }} --service ${{ env.AWS_API_SERVICE_NAME }} --force-new-deployment --region ${{ env.AWS_REGION }}
+
+      - name: Trigger APP deploy
+        run: aws ecs update-service --cluster ${{ env.AWS_APP_CLUSTER_NAME }} --service ${{ env.AWS_APP_SERVICE_NAME }} --force-new-deployment --region ${{ env.AWS_REGION }}
+
+    
