@@ -27,13 +27,11 @@ jobs:
         with:
           context: ./api
           push: true
-          target: prod
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}-api:latest
       -
         name: Build and push app
         uses: docker/build-push-action@v5
         with:
           context: ./app
           push: true
-          target: prod
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}-app:latest
