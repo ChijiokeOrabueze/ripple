@@ -9,44 +9,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Checkout
+      - name: Checkout
         uses: actions/checkout@v4
-      -
-        name: Login to Docker Hub
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Set up Docker Buildx
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      -
-        name: Build and push api
+      - name: Build and push api
         uses: docker/build-push-action@v5
         with:
           context: ./api
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}-api:latest
-      -
-        name: Build and push app
+      - name: Build and push app
         uses: docker/build-push-action@v5
         with:
           context: ./app
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}-app:latest
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+      # - name: Configure AWS credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Trigger API deploy
-        run: aws ecs update-service --cluster ${{ secrets.AWS_API_CLUSTER_NAME }} --service ${{ secrets.AWS_API_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
+      # - name: Trigger API deploy
+      #   run: aws ecs update-service --cluster ${{ secrets.AWS_API_CLUSTER_NAME }} --service ${{ secrets.AWS_API_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
 
-      - name: Trigger APP deploy
-        run: aws ecs update-service --cluster ${{ secrets.AWS_APP_CLUSTER_NAME }} --service ${{ secrets.AWS_APP_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
-
-    
+      # - name: Trigger APP deploy
+      #   run: aws ecs update-service --cluster ${{ secrets.AWS_APP_CLUSTER_NAME }} --service ${{ secrets.AWS_APP_SERVICE_NAME }} --force-new-deployment --region ${{ secrets.AWS_REGION }}
