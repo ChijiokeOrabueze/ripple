@@ -115,7 +115,7 @@ export const WorkflowPage = ({ incomingComponents }: WorkflowPageProps) => {
 
       const editResponse = await editWorkflowApiCall.run(
         actions[0],
-        `/${incomingComponents.workflowId}/${"actionId"}`
+        `/${incomingComponents.workflowId}/${actionId}`
       );
 
       if (editResponse) router.push("/");
